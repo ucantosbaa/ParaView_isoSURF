@@ -91,7 +91,7 @@ if __name__ == '__main__':
     startx,starty,startz,midx,midy,midz,endx,endy,endz = compute_bounds(x,y,z)
 
     renderView1 = setup_render_view(startx,midx,midy,endy,midz,endz,
-                                    cx,cy,cz,cps,raytracing)
+                                    cx,cy,cz,cps,resolution,raytracing)
 
     # Load Plugins
     LoadPlugin(f'{plugin_dir}/netcdfSource.py', ns=globals())

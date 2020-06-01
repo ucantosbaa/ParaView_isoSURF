@@ -18,13 +18,14 @@ def compute_bounds(x,y,z):
     return startx,starty,startz,midx,midy,midz,endx,endy,endz
 
 
-def setup_render_view(startx,midx,midy,endy,midz,endz,cx,cy,cz,cps,raytracing):
+def setup_render_view(startx,midx,midy,endy,midz,endz,cx,cy,cz,cps,
+                      resolution, raytracing):
     # get the material library
     materialLibrary1 = GetMaterialLibrary()
 
     # Create a new 'Render View'
     renderView1 = CreateView('RenderView')
-    renderView1.ViewSize = [946, 468]
+    renderView1.ViewSize = [resolution[0], resolution[1]]
     renderView1.AxesGrid = 'GridAxes3DActor'
     renderView1.CenterOfRotation = [midx,midy,midz]
     renderView1.StereoType = 'Crystal Eyes'
