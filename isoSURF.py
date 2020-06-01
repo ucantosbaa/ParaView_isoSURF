@@ -102,7 +102,7 @@ if __name__ == '__main__':
         if (nt > 1):
             int2char = str(it*istep+istart).zfill(6) # Timestep of file to open
             data_fname = f're550_{int2char}vel_der_eps.nc'
-            imag_name = f'test_image_{i}.png'
+            imag_name = f'test_image_{it}.png'
 
         # Compute Bounds of Grid
         startx,starty,startz,midx,midy,midz,endx,endy,endz = compute_bounds(x,y,z)
@@ -123,17 +123,23 @@ if __name__ == '__main__':
         netcdfSource1.nz = nz
 
         # Create Isosurfaces
-        contour[]
-        for is in range(isosurface_fields.size)
+        contour=[]
+        contourDisplay=[]
+        for iS in range(len(isosurface_fields)):
             contour.append(Contour(Input=netcdfSource1))
-            contour[is].ContourBy = ['POINTS', isosurface_fields[is]]
-            contour[is].Isosurfaces = [isovalue[is]]
-            contour[is].PointMergeMethod = 'Uniform Binning'
+            contourDisplay.append(Show(contour[iS], renderView1,
+                                       'GeometryRepresentation'))
+            contour[iS].ContourBy = ['POINTS', isosurface_fields[iS]]
+            contour[iS].Isosurfaces = [isovalue[iS]]
+            contour[iS].PointMergeMethod = 'Uniform Binning'
 
             # Settings for Isosurface
-            isosurface_settings(contour[is], renderView1, isosurface_fields[is],
-                                scalar_to_color[is], cmap[is], cmap_min[is],
-                                cmap_max[is], raytracing)
+            isosurface_settings(contour[iS], contourDisplay[iS],
+                                renderView1, isosurface_fields[iS],
+                                scalar_to_color[iS], cmap[iS], cmap_min[iS],
+                                cmap_max[iS], raytracing)
+
+            contour[iS].UpdatePipeline()
 
         # create a new 'Plane'
         if wall:

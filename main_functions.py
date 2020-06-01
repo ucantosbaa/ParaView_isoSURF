@@ -57,11 +57,8 @@ def setup_render_view(startx,midx,midy,endy,midz,endz,cx,cy,cz,cps,
     return renderView1
 
 
-def isosurface_settings(contour1, renderView1, isosurface_field,
+def isosurface_settings(contour1, contour1Display, renderView1, isosurface_field,
                         scalar_to_color, cmap, cmap_min, cmap_max, raytracing):
-
-    # show data from contour1
-    contour1Display = Show(contour1, renderView1, 'GeometryRepresentation')
 
     # get color transfer function/color map for scalar
     LUT = GetColorTransferFunction(scalar_to_color)
