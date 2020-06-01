@@ -47,7 +47,7 @@ set -x
 ###########################################################  
 
 ############################################################
-srun pvbatch --mpi --symmetric --force-offscreen-rendering /linkhome/rech/genlfl01/ulj39ir/scripts/post_process/Paraview_isoSURF/isoSURF.py
+srun pvbatch --mpi --symmetric --force-offscreen-rendering /linkhome/rech/genlfl01/username/path/to/folder/Paraview_isoSURF/isoSURF.py
 ############################################################ 
 
 ```
@@ -56,6 +56,9 @@ Change the directory of the python script to match your home directory.
 When you ssh to idris, remember to ```ssh -X idris``` to enable X forwarding.
 
 Sometimes when I submit the script, it runs smoothly until the last command where I save a screenshot in Paraview, where it procudes the following error:
+```
+vtkXOpenGLRenderWindow.:451    ERR| vtkXOpenGLRenderWindow (0x50858d0): bad X server connection. DISPLAY
+```
 
 And other times it runs ok until the end. I will have to investigate further with assist@idris.fr
 

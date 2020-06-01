@@ -13,19 +13,19 @@ from main_functions import *
 # =============================================================================
 
 # Plugins Directory
-plugin_dir = f'/home/argyris/PhD/scripts/post_process/plugins'
+plugin_dir = f'/linkhome/rech/genlfl01/username/path/to/folder/Paraview_isoSURF'
 
 # Data and Grids Directory
-data_dir = f'/home/argyris/PhD/scripts/post_process/test_py2paraview'
-grid_dir = f'/home/argyris/PhD/scripts/post_process/test_py2paraview'
+data_dir = f'/gpfsscratch/rech/avl/username/path/to/data/folder'
+grid_dir = f'/gpfsscratch/rech/avl/username/path/to/grid/folder'
 
 # Data and Grids file names
 data_fname = f'Q_small_field.nc'
 grid_fname = f'grid.nc'
 
 # Image directory and name
-imag_dir = f'/home/argyris'
-imag_name = 'test_im.png'
+imag_dir = f'/gpfsscratch/rech/avl/username/path/to/image/folder'
+imag_name = 'test_imamge.png'
 
 # Fields to Load from netcdf as they appear in the netcdf file
 # If we want a grid coordinate to load as a scalar variable add to the list
