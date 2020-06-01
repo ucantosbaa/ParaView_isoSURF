@@ -4,7 +4,7 @@ Clone the repository in your home directory
 
 ```console
 cd $HOME
-git clone https://github.com/argapost/Paraview_isoSURF.git
+git clone https://github.com/argapost/ParaView_isoSURF.git
 cd Paraview_isoSURF
 ```
 
