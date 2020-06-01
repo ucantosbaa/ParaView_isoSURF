@@ -79,7 +79,7 @@ cz = 1.9
 cps = 1.5 * y[-1] # smaller values -> zoom in !! bigger -> zoom out
 
 # Enable raytracing, change value to 1 for raytracing rendering
-raytracing = 1
+raytracing = 0
 
 
 # %%===========================================================================
