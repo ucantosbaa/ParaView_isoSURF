@@ -52,20 +52,23 @@ del f
 # ------------
 
 # Time evolution settings
-nt = 1          # number of saved timesteps
+nt = 300          # number of saved timesteps
 istart = 2200   # Iteration number of first saved time step
 istep = 50      # Number of iterations per saved time step
 
 # Isosurface Settings.
 # For multiple isosurfaces just add entries to all the  corresponding arrays.
 isosurface_fields = ['u','u']
-isovalue = [-0.2,0.2]
-scalar_to_color = ['y','y'] # Scalar field to color the isosurface
+isovalue = [-0.2,0.15]
+scalar_to_color = ['','u'] # Scalar field to color the isosurface, if we want solid color put ''
+
 
 # Colormap
-cmap = ['Blues','Blues']
-cmap_min = [y[0], y[0]]  # min value color
-cmap_max = [y[120], y[120]] # max value color
+cmap = ['Blues','Reds']
+cmap_min = [0, 0.]  # min value color
+cmap_max = [0, 0.3] # max value color
+
+solid_color = [[68,107,242],[0,0,0]]/255. # Solid color in RGB
 
 # Create a plane for bottom wall(0: False, 1: True)
 wall = 1
@@ -76,15 +79,15 @@ resolution = [1280,720] # Image resolution
 # Adjust Camera position with respect to grid coordinates
 # CameraPosition = (x[0]*cx, y[-1]*cy, z[-1]*cz)
 cx = 1
-cy = 1.8
-cz = 1.9
+cy = 2
+cz = 2
 
 # Camera Parallel Scale - Zoom in/out
 # Distance from focal point to edge of viewport(?)
-cps = 1.5 * y[-1] # smaller values -> zoom in !! bigger -> zoom out
+cps = 2.4 * y[-1] # smaller values -> zoom in !! bigger -> zoom out
 
 # Enable raytracing, change value to 1 for raytracing rendering
-raytracing = 0
+raytracing = 1
 
 
 # %%===========================================================================
@@ -129,6 +132,7 @@ if __name__ == '__main__':
             contour.append(Contour(Input=netcdfSource1))
             contourDisplay.append(Show(contour[iS], renderView1,
                                        'GeometryRepresentation'))
+            contourDisplay[iS].UseSeparateColorMap = True
             contour[iS].ContourBy = ['POINTS', isosurface_fields[iS]]
             contour[iS].Isosurfaces = [isovalue[iS]]
             contour[iS].PointMergeMethod = 'Uniform Binning'
@@ -137,7 +141,7 @@ if __name__ == '__main__':
             isosurface_settings(contour[iS], contourDisplay[iS],
                                 renderView1, isosurface_fields[iS],
                                 scalar_to_color[iS], cmap[iS], cmap_min[iS],
-                                cmap_max[iS], raytracing)
+                                cmap_max[iS], solid_color[iS], raytracing)
 
             contour[iS].UpdatePipeline()
 

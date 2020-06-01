@@ -58,17 +58,22 @@ def setup_render_view(startx,midx,midy,endy,midz,endz,cx,cy,cz,cps,
 
 
 def isosurface_settings(contour1, contour1Display, renderView1, isosurface_field,
-                        scalar_to_color, cmap, cmap_min, cmap_max, raytracing):
+                        scalar_to_color, cmap, cmap_min, cmap_max,
+                        solid_color, raytracing):
 
     # get color transfer function/color map for scalar
-    LUT = GetColorTransferFunction(scalar_to_color)
+    LUT = GetColorTransferFunction(scalar_to_color, separate=True)
     LUT.ApplyPreset(cmap, True)
     LUT.RescaleTransferFunction(cmap_min, cmap_max)
 
     # trace defaults for the display properties.
     contour1Display.Representation = 'Surface'
     contour1Display.ColorArrayName = ['POINTS', scalar_to_color]
-    contour1Display.LookupTable = LUT
+    if scalar_to_color:
+        contour1Display.LookupTable = LUT
+    else:
+        contour1Display.AmbientColor = solid_color
+        contour1Display.DiffuseColor = solid_color
     contour1Display.OSPRayScaleArray = isosurface_field
     contour1Display.OSPRayScaleFunction = 'PiecewiseFunction'
     contour1Display.SelectOrientationVectors = 'None'
