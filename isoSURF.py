@@ -68,7 +68,7 @@ cmap = ['Blues','Reds']
 cmap_min = [0, 0.]  # min value color
 cmap_max = [0, 0.3] # max value color
 
-solid_color = [[68,107,242],[0,0,0]]/255. # Solid color in RGB
+solid_color = [[68/255.,107/255.,242/255.],[0,0,0]] # Solid color in RGB
 
 # Create a plane for bottom wall(0: False, 1: True)
 wall = 1
