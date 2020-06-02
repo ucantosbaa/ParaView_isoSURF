@@ -30,7 +30,7 @@ imag_name = f'test_image.png'
 # Fields to Load from netcdf as they appear in the netcdf file
 # If we want a grid coordinate to load as a scalar variable add to the list
 # 'x','y', or 'z'
-fields = 'u,y'
+fields = 'Tr_fl'
 
 # Grids variables names as they appear in the netcdf file
 grid_var_names = 'gridx,gridy,gridz'
@@ -58,9 +58,9 @@ istep = 50      # Number of iterations per saved time step
 
 # Isosurface Settings.
 # For multiple isosurfaces just add entries to all the  corresponding arrays.
-isosurface_fields = ['u','u']
+isosurface_fields = ['Tr_fl1','Tr_fl30']
 isovalue = [-0.2,0.15]
-scalar_to_color = ['','u'] # Scalar field to color the isosurface, if we want solid color put ''
+scalar_to_color = ['','Tr_fl30'] # Scalar field to color the isosurface, if we want solid color put ''
 
 
 # Colormap
@@ -68,7 +68,7 @@ cmap = ['Blues','Reds']
 cmap_min = [0, 0.]  # min value color
 cmap_max = [0, 0.3] # max value color
 
-solid_color = [[68,107,242],[0,0,0]]/255. # Solid color in RGB
+solid_color = [[68/255.,107/255.,242/255.],[0,0,0]]# Solid color in RGB
 
 # Create a plane for bottom wall(0: False, 1: True)
 wall = 1
@@ -102,10 +102,11 @@ if __name__ == '__main__':
 
         # If multiple time steps change the name of netcdf file to open
         # and the name of image to be saved
-        if (nt > 1):
-            int2char = str(it*istep+istart).zfill(6) # Timestep of file to open
-            data_fname = f're550_{int2char}vel_der_eps.nc'
-            imag_name = f'test_image_{it}.png'
+        # if (nt > 1):
+        #     int2char = str(it*istep+istart).zfill(6) # Timestep of file to open
+        #     data_fname = f're550_{int2char}vel_der_eps.nc'
+        #     imag_name = f'test_image_{it}.png'
+        imag_name = f'test_image_{it}.png'
 
         # Compute Bounds of Grid
         startx,starty,startz,midx,midy,midz,endx,endy,endz = compute_bounds(x,y,z)
@@ -124,6 +125,7 @@ if __name__ == '__main__':
         netcdfSource1.nx = nx
         netcdfSource1.ny = ny
         netcdfSource1.nz = nz
+        netcdfSource1.it = it
 
         # Create Isosurfaces
         contour=[]

@@ -19,6 +19,8 @@ class netcdfSource(VTKPythonAlgorithmBase):
         self.ny = 1
         self.nz = 1
 
+        self.it = 1
+
         self.nvar = 1
         self.ngvar = 0
 
@@ -40,11 +42,13 @@ class netcdfSource(VTKPythonAlgorithmBase):
         # Read Data file
         f = Dataset(self.__DFileName, 'r')
 
-        data = np.zeros([nz,ny,nx,self.nvar])
+        data = np.zeros([nz,ny,nx,3,self.nvar])
         for i,field in enumerate(self._fields):
-            data[:,:,:,i] = f.variables[field][exts[4]:exts[5]+1,
-                                               exts[2]:exts[3]+1,
-                                               exts[0]:exts[1]+1]
+            for ir in [1,10,30]:
+                data[:,:,:,ir,i] = f.variables[field][self.it, ir,
+                                                      exts[4]:exts[5]+1,
+                                                      exts[2]:exts[3]+1,
+                                                      exts[0]:exts[1]+1]
         f.close()
         del f
 
@@ -65,7 +69,8 @@ class netcdfSource(VTKPythonAlgorithmBase):
         output.SetZCoordinates(dsa.numpyTovtkDataArray(z,"Z"))
 
         for i,field in enumerate(self._fields):
-            output.PointData.append(data[:,:,:,i].ravel(), field)
+            for ir in [1,10,30]:
+                output.PointData.append(data[:,:,:,ir,i].ravel(), field+str(ir))
 
         if self._grids:
             Z, Y, X = np.meshgrid(z,y,x,indexing='ij')
@@ -122,6 +127,11 @@ class netcdfSource(VTKPythonAlgorithmBase):
     @smproperty.intvector(name="nz", default_values=10)
     def SetNz(self, nz):
         self.nz = nz
+        self.Modified()
+
+    @smproperty.intvector(name="it", default_values=1)
+    def SetIt(self, it):
+        self.it = it
         self.Modified()
 
     @smproperty.stringvector(name="FieldsToLoad")
