@@ -42,7 +42,7 @@ class netcdfSource(VTKPythonAlgorithmBase):
         # Read Data file
         f = Dataset(self.__DFileName, 'r')
 
-        data = np.zeros([nz,ny,nx,3,self.nvar])
+        data = np.zeros([nz,ny,nx,self.nvar])
         for i,field in enumerate(self._fields):
             data[:,:,:,i] = f.variables[field][self.iy,
                                                     exts[4]:exts[5]+1,

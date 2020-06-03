@@ -6,6 +6,7 @@ import vtk
 from paraview.simple import *
 from vtk.numpy_interface import dataset_adapter as dsa
 from netCDF4 import Dataset
+sys.path.insert(1, '.')
 from main_functions import *
 
 # %%===========================================================================
@@ -13,18 +14,18 @@ from main_functions import *
 # =============================================================================
 
 # Plugins Directory
-plugin_dir = f'/linkhome/rech/genlfl01/username/path/to/folder/Paraview_isoSURF'
+plugin_dir = f'/home/argyris/PhD/scripts/post_process/ParaView_isoSURF'
 
 # Data and Grids Directory
-data_dir = f'/gpfsscratch/rech/avl/username/path/to/data/folder'
-grid_dir = f'/gpfsscratch/rech/avl/username/path/to/grid/folder'
+data_dir = f'/home/argyris/PhD/TCF/Re550/data'
+grid_dir = data_dir
 
 # Data and Grids file names
-data_fname = f're550_016000vel_der_eps.nc'
+data_fname = f're550_Tr_Ty_ISF_Dis_duidui_rxryrz.nc'
 grid_fname = data_fname
 
 # Image directory and name
-imag_dir = f'/gpfsscratch/rech/avl/username/path/to/image/folder'
+imag_dir = f'/home/argyris/PhD/TCF/Re550/figures/KHMH_rxryrz/Tr_rxryrz_iso'
 
 # Fields to Load from netcdf as they appear in the netcdf file
 # If we want a grid coordinate to load as a scalar variable add to the list
@@ -100,7 +101,8 @@ if __name__ == '__main__':
     # Load Plugins
     LoadPlugin(f'{plugin_dir}/netcdfSource.py', ns=globals())
 
-    for iy in range(nyp):
+    for iy in range(1):
+        iy=100
 
         # If multiple time steps change the name of netcdf file to open
         # and the name of image to be saved
@@ -169,6 +171,6 @@ if __name__ == '__main__':
 
         # If multiple time steps need to be opened
         # reset session to open new files
-        if nyp>1:
-            Disconnect()
-            Connect()
+        # if nyp>1:
+        #     Disconnect()
+        #     Connect()
