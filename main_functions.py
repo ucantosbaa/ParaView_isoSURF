@@ -93,13 +93,14 @@ def isosurface_settings(contour1, contour1Display, renderView1, isosurface_field
         contour1Display.Roughness = 0.24
         contour1Display.Metallic = 0.1
 
-    # get color legend/bar for yLUT in view renderView1
-    LUTColorBar = GetScalarBar(LUT, renderView1)
-    LUTColorBar.Title = scalar_to_color
-    LUTColorBar.ComponentTitle = ''
+    if scalar_to_color:
+        # get color legend/bar for yLUT in view renderView1
+        LUTColorBar = GetScalarBar(LUT, renderView1)
+        LUTColorBar.Title = scalar_to_color
+        LUTColorBar.ComponentTitle = ''
 
-    # set color bar visibility
-    LUTColorBar.Visibility = 0
+        # set color bar visibility
+        LUTColorBar.Visibility = 0
 
     # show color legend
     contour1Display.SetScalarBarVisibility(renderView1, False)

@@ -44,8 +44,8 @@ class netcdfSource(VTKPythonAlgorithmBase):
 
         data = np.zeros([nz,ny,nx,3,self.nvar])
         for i,field in enumerate(self._fields):
-            for ir in [1,10,30]:
-                data[:,:,:,ir,i] = f.variables[field][self.it, ir,
+            for ir,r in enumerate([1,10,30]):
+                data[:,:,:,ir,i] = f.variables[field][self.it, r,
                                                       exts[4]:exts[5]+1,
                                                       exts[2]:exts[3]+1,
                                                       exts[0]:exts[1]+1]
@@ -69,7 +69,7 @@ class netcdfSource(VTKPythonAlgorithmBase):
         output.SetZCoordinates(dsa.numpyTovtkDataArray(z,"Z"))
 
         for i,field in enumerate(self._fields):
-            for ir in [1,10,30]:
+            for ir in range(3):
                 output.PointData.append(data[:,:,:,ir,i].ravel(), field+str(ir))
 
         if self._grids:
