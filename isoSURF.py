@@ -30,7 +30,7 @@ imag_name = f'test_image.png'
 # Fields to Load from netcdf as they appear in the netcdf file
 # If we want a grid coordinate to load as a scalar variable add to the list
 # 'x','y', or 'z'
-fields = 'u,y'
+fields = 'Q,y'
 
 # Grids variables names as they appear in the netcdf file
 grid_var_names = 'gridx,gridy,gridz'
@@ -52,21 +52,21 @@ del f
 # ------------
 
 # Time evolution settings
-nt = 300          # number of saved timesteps
+nt = 1          # number of saved timesteps
 istart = 2200   # Iteration number of first saved time step
 istep = 50      # Number of iterations per saved time step
 
 # Isosurface Settings.
 # For multiple isosurfaces just add entries to all the  corresponding arrays.
-isosurface_fields = ['u','u']
-isovalue = [-0.2,0.15]
-scalar_to_color = ['','u'] # Scalar field to color the isosurface, if we want solid color put ''
+isosurface_fields = ['Q']
+isovalue = [0.05]
+scalar_to_color = ['y'] # Scalar field to color the isosurface, if we want solid color put ''
 
 
 # Colormap
-cmap = ['Blues','Reds']
-cmap_min = [0, 0.]  # min value color
-cmap_max = [0, 0.3] # max value color
+cmap = ['Blues']
+cmap_min = [y[0]]  # min value color
+cmap_max = [y[-1]] # max value color
 
 solid_color = [[68/255.,107/255.,242/255.],[0,0,0]] # Solid color in RGB
 
