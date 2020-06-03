@@ -13,7 +13,7 @@ from main_functions import *
 # =============================================================================
 
 # Plugins Directory
-plugin_dir = f'/linkhome/rech/genlfl01/username/path/to/folder/Paraview_isoSURF'
+plugin_dir = f'/linkhome/rech/genlfl01/username/path/to/folder/ParaView_isoSURF'
 
 # Data and Grids Directory
 data_dir = f'/gpfsscratch/rech/avl/username/path/to/data/folder'
