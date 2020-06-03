@@ -21,25 +21,25 @@ grid_dir = f'/gpfsscratch/rech/avl/username/path/to/grid/folder'
 
 # Data and Grids file names
 data_fname = f're550_016000vel_der_eps.nc'
-grid_fname = f'grid.nc'
+grid_fname = data_fname
 
 # Image directory and name
 imag_dir = f'/gpfsscratch/rech/avl/username/path/to/image/folder'
-imag_name = f'test_image.png'
 
 # Fields to Load from netcdf as they appear in the netcdf file
 # If we want a grid coordinate to load as a scalar variable add to the list
 # 'x','y', or 'z'
-fields = 'Tr_fl'
+fields = 'Tr'
 
 # Grids variables names as they appear in the netcdf file
-grid_var_names = 'gridx,gridy,gridz'
+grid_var_names = 'grid_rx,grid_ry,grid_rz'
 
 # Size of fields to load (nx,ny,nz)
-nx = 800
-ny = 193
-nz = 700
+nx = 51
+ny = 101
+nz = 101
 
+nyp = 301
 
 # Read Grid file - no changes needed
 # ------------
@@ -47,6 +47,7 @@ f = Dataset(f'{grid_dir}/{grid_fname}', 'r')
 x = f.variables[grid_var_names.split(',')[0]][:nx]
 y = f.variables[grid_var_names.split(',')[1]][:ny]
 z = f.variables[grid_var_names.split(',')[2]][:nz]
+yp = f.variables['grid_y'][:nyp]
 f.close()
 del f
 # ------------
@@ -56,19 +57,20 @@ nt = 300          # number of saved timesteps
 istart = 2200   # Iteration number of first saved time step
 istep = 50      # Number of iterations per saved time step
 
+
 # Isosurface Settings.
 # For multiple isosurfaces just add entries to all the  corresponding arrays.
-isosurface_fields = ['Tr_fl1','Tr_fl30']
-isovalue = [-0.2,0.15]
-scalar_to_color = ['','Tr_fl30'] # Scalar field to color the isosurface, if we want solid color put ''
+isosurface_fields = ['Tr']
+isovalue = [-0.2]
+scalar_to_color = [''] # Scalar field to color the isosurface, if we want solid color put ''
 
 
 # Colormap
-cmap = ['Blues','Reds']
-cmap_min = [0, 0.]  # min value color
-cmap_max = [0, 0.3] # max value color
+cmap = ['Blues']
+cmap_min = [0]  # min value color
+cmap_max = [0] # max value color
 
-solid_color = [[68/255.,107/255.,242/255.],[0,0,0]]# Solid color in RGB
+solid_color = [[68/255.,107/255.,242/255.]]# Solid color in RGB
 
 # Create a plane for bottom wall(0: False, 1: True)
 wall = 1
@@ -98,7 +100,7 @@ if __name__ == '__main__':
     # Load Plugins
     LoadPlugin(f'{plugin_dir}/netcdfSource.py', ns=globals())
 
-    for it in range(nt):
+    for iy in range(nyp):
 
         # If multiple time steps change the name of netcdf file to open
         # and the name of image to be saved
@@ -106,7 +108,7 @@ if __name__ == '__main__':
         #     int2char = str(it*istep+istart).zfill(6) # Timestep of file to open
         #     data_fname = f're550_{int2char}vel_der_eps.nc'
         #     imag_name = f'test_image_{it}.png'
-        imag_name = f'test_image_{it}.png'
+        imag_name = f'Tr_rxryrz_{iy}.png'
 
         # Compute Bounds of Grid
         startx,starty,startz,midx,midy,midz,endx,endy,endz = compute_bounds(x,y,z)
@@ -125,7 +127,7 @@ if __name__ == '__main__':
         netcdfSource1.nx = nx
         netcdfSource1.ny = ny
         netcdfSource1.nz = nz
-        netcdfSource1.it = it
+        netcdfSource1.iy = iy
 
         # Create Isosurfaces
         contour=[]
@@ -167,6 +169,6 @@ if __name__ == '__main__':
 
         # If multiple time steps need to be opened
         # reset session to open new files
-        if nt>1:
+        if nyp>1:
             Disconnect()
             Connect()
