@@ -6,9 +6,20 @@ import vtk
 from paraview.simple import *
 from vtk.numpy_interface import dataset_adapter as dsa
 from netCDF4 import Dataset
+import sys
+sys.path.insert(1, '/home/argyris/PhD/scripts/post_process/modules')
+sys.path.insert(1, 'modules')
+from case_mod import *
 sys.path.insert(1, '.')
 from main_functions import *
+import numpy as np
 
+# Init re550 Case parameters
+
+re550   = Case(550, nu=1./(0.1118e5),
+                nx=2048, ny=301, nz=2048, nt=300,
+                dx=0.01227, dz=0.006136, dt_s=0.0037, iout=50,
+                case='')
 # %%===========================================================================
 # User Settings
 # =============================================================================
@@ -45,10 +56,10 @@ nyp = 301
 # Read Grid file - no changes needed
 # ------------
 f = Dataset(f'{grid_dir}/{grid_fname}', 'r')
-x = f.variables[grid_var_names.split(',')[0]][:nx]
-y = f.variables[grid_var_names.split(',')[1]][:ny]
-z = f.variables[grid_var_names.split(',')[2]][:nz]
-yp = f.variables['grid_y'][:nyp]
+x = f.variables[grid_var_names.split(',')[0]][:nx]/re550.delta_nu
+y = f.variables[grid_var_names.split(',')[1]][:ny]/re550.delta_nu
+z = f.variables[grid_var_names.split(',')[2]][:nz]/re550.delta_nu
+yp = f.variables['grid_y'][:nyp]/re550.delta_nu
 f.close()
 del f
 # ------------
@@ -61,17 +72,18 @@ istep = 50      # Number of iterations per saved time step
 
 # Isosurface Settings.
 # For multiple isosurfaces just add entries to all the  corresponding arrays.
-isosurface_fields = ['Tr']
-isovalue = [-0.2]
-scalar_to_color = [''] # Scalar field to color the isosurface, if we want solid color put ''
-
+isosurface_fields = ['Tr']*15
+isovalue = np.linspace(-0.2,0.1,15).tolist()
+# isovalue_2 = np.linspace(-0.05,0.05,15).tolist()
+# isovalue_3 = np.linspace(-0.02,0.01,15).tolist()
+scalar_to_color = ['Tr']*15 # Scalar field to color the isosurface, if we want solid color put ''
 
 # Colormap
-cmap = ['Blues']
-cmap_min = [0]  # min value color
-cmap_max = [0] # max value color
+cmap = ['BuRd']*15
+cmap_min = [-0.03]*15  # min value color
+cmap_max = [0.03]*15 # max value color
 
-solid_color = [[68/255.,107/255.,242/255.]]# Solid color in RGB
+solid_color = [[68/255.,107/255.,242/255.]]*15# Solid color in RGB
 
 # Create a plane for bottom wall(0: False, 1: True)
 wall = 1
@@ -81,16 +93,16 @@ resolution = [1280,720] # Image resolution
 
 # Adjust Camera position with respect to grid coordinates
 # CameraPosition = (x[0]*cx, y[-1]*cy, z[-1]*cz)
-cx = 1
-cy = 2
-cz = 2
+cx = -1
+cy = 0.7
+cz = -0.5
 
 # Camera Parallel Scale - Zoom in/out
 # Distance from focal point to edge of viewport(?)
-cps = 2.4 * y[-1] # smaller values -> zoom in !! bigger -> zoom out
+cps = 0.6 * y[-1] # smaller values -> zoom in !! bigger -> zoom out
 
 # Enable raytracing, change value to 1 for raytracing rendering
-raytracing = 1
+raytracing = 0
 
 
 # %%===========================================================================
@@ -101,28 +113,24 @@ if __name__ == '__main__':
     # Load Plugins
     LoadPlugin(f'{plugin_dir}/netcdfSource.py', ns=globals())
 
-    for iy in range(1):
-        iy=100
+    for iy in range(1,90):
 
-        # If multiple time steps change the name of netcdf file to open
-        # and the name of image to be saved
-        # if (nt > 1):
-        #     int2char = str(it*istep+istart).zfill(6) # Timestep of file to open
-        #     data_fname = f're550_{int2char}vel_der_eps.nc'
-        #     imag_name = f'test_image_{it}.png'
+        if ( iy % 30 == 0 ):
+            isovalue[:] = [x / 2 for x in isovalue]
+
         imag_name = f'Tr_rxryrz_{iy}.png'
 
         # Compute Bounds of Grid
         startx,starty,startz,midx,midy,midz,endx,endy,endz = compute_bounds(x,y,z)
 
-        renderView1 = setup_render_view(startx,midx,midy,endy,midz,endz,
+        renderView1 = setup_render_view(endx,midx,midy,endy,midz,endz,
                                         cx,cy,cz,cps,resolution,raytracing)
 
 
 
         # create a new 'netcdf Source'
         netcdfSource1 = netcdfSource(DataFileName=f'{data_dir}/{data_fname}',
-                                    GridFileName=f'{grid_dir}/{grid_fname}')
+                                     GridFileName=f'{grid_dir}/{grid_fname}')
 
         netcdfSource1.FieldsToLoad = fields
         netcdfSource1.VariableNameOfGridsInNetcdfFile = grid_var_names
@@ -165,12 +173,12 @@ if __name__ == '__main__':
 
         # Save Screenshot
         SaveScreenshot(f'{imag_dir}/{imag_name}',ImageResolution=(resolution[0],
-                                                                resolution[1]),
-                        TransparentBackground = 1,
-                        CompressionLevel = 0)
+                                                                  resolution[1]),
+                       TransparentBackground = 1,
+                       CompressionLevel = 0)
 
         # If multiple time steps need to be opened
         # reset session to open new files
-        # if nyp>1:
-        #     Disconnect()
-        #     Connect()
+        if nyp>1:
+            Disconnect()
+            Connect()

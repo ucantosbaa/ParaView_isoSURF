@@ -4,6 +4,10 @@ from netCDF4 import Dataset
 from vtk.util.vtkAlgorithm import VTKPythonAlgorithmBase
 from vtk.numpy_interface import dataset_adapter as dsa
 from paraview.util.vtkAlgorithm import *
+import sys
+sys.path.insert(1, '/home/argyris/PhD/scripts/post_process/modules')
+sys.path.insert(1, 'modules')
+from case_mod import *
 
 @smproxy.source(name="netcdfSource", label="netcdf Source")
 class netcdfSource(VTKPythonAlgorithmBase):
@@ -39,6 +43,12 @@ class netcdfSource(VTKPythonAlgorithmBase):
         ny = exts[3]-exts[2]+1
         nz = exts[5]-exts[4]+1
 
+        # Initialise retau=550 case
+        re550   = Case(550, nu=1./(0.1118e5),
+                        nx=2048, ny=301, nz=2048, nt=300,
+                        dx=0.01227, dz=0.006136, dt_s=0.0037, iout=50,
+                        case='')
+
         # Read Data file
         f = Dataset(self.__DFileName, 'r')
 
@@ -48,15 +58,20 @@ class netcdfSource(VTKPythonAlgorithmBase):
                                                     exts[4]:exts[5]+1,
                                                     exts[2]:exts[3]+1,
                                                     exts[0]:exts[1]+1]
+            if field == 'Tr':
+                data[:,:,:,i] = data[:,:,:,i] * re550.nu / re550.u_tau ** 4
+
         f.close()
         del f
 
 
+
+
         # Read Grid file
         f = Dataset(self.__GFileName, 'r')
-        x = f.variables[self._grid_var_names[0]][exts[0]:exts[1]+1]
-        y = f.variables[self._grid_var_names[1]][exts[2]:exts[3]+1]
-        z = f.variables[self._grid_var_names[2]][exts[4]:exts[5]+1]
+        x = f.variables[self._grid_var_names[0]][exts[0]:exts[1]+1] / re550.delta_nu
+        y = f.variables[self._grid_var_names[1]][exts[2]:exts[3]+1] / re550.delta_nu
+        z = f.variables[self._grid_var_names[2]][exts[4]:exts[5]+1] / re550.delta_nu
         f.close()
         del f
 

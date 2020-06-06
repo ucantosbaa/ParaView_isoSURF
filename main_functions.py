@@ -54,6 +54,7 @@ def setup_render_view(startx,midx,midy,endy,midz,endz,cx,cy,cz,cps,
 
     SetActiveView(renderView1)
 
+    renderView1.OrientationAxesVisibility = 0
     return renderView1
 
 
