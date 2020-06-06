@@ -116,7 +116,7 @@ if __name__ == '__main__':
     for iy in range(1,90):
 
         if ( iy % 30 == 0 ):
-            isovalue[:] = [x / 2 for x in isovalue]
+            isovalue[:] = [x / 3 for x in isovalue]
 
         imag_name = f'Tr_rxryrz_{iy}.png'
 
