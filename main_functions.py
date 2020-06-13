@@ -62,7 +62,7 @@ def isosurface_settings(contour1, contour1Display, renderView1, isosurface_field
                         solid_color, raytracing):
 
     # get color transfer function/color map for scalar
-    LUT = GetColorTransferFunction(scalar_to_color, separate=True)
+    LUT = GetColorTransferFunction(scalar_to_color, contour1Display, separate=True)
     LUT.ApplyPreset(cmap, True)
     LUT.RescaleTransferFunction(cmap_min, cmap_max)
 
